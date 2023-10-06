@@ -1,0 +1,53 @@
+#include <iostream>
+#include <math.h>
+#include <stdlib.h>
+#include<string>
+
+
+using namespace std;
+
+
+
+int main (){
+    int num1, num2;
+
+    string something;
+cout<<"Enter equation:"<<endl;
+
+getline(cin,something);
+   
+char op='\0'; //initialize the op parameter to NULL
+
+int i=0;
+while(i<something.length()){ //check which operation is inputted on the program
+    if(something[i]=='+'||something[i]=='-'||something[i]=='*'||something[i]=='/'||something[i]=='^'){
+        op=something[i];
+        break;
+    }
+    i++;
+
+}
+num1=stoi(something.substr(0,i)); //changing the number in string to integer 
+num2=stoi(something.substr(i+1)); 
+
+int temp;
+
+    switch (op)
+    {
+    case '+' :
+    temp= num2+num1;
+        break;
+    
+    case '-': temp= num2-num1;
+    break;
+
+    case '*': temp= num2*num1;
+    break;
+
+    case '/': temp= num2/num1;
+    break;
+
+    case '^': temp= pow(num2,num1);
+    }
+    cout<<temp;
+}
