@@ -4,7 +4,21 @@
 #include "Sci_Calcu.h"
 using namespace std;
 
-
+float calculator::operatorCalc(doublyLinkedList list,string val, int position){
+     if (val[0] == '^') {
+            return pow(list.getFloat(position-1),list.getFloat(position+1));
+        } else if (val[0] == '*') {
+            return list.getFloat(position-1) * list.getFloat(position+1);
+        } else if (val[0] == '/') {
+            return list.getFloat(position-1) / list.getFloat(position+1);
+        } else if (val[0] == '+') {
+            return list.getFloat(position-1) + list.getFloat(position+1);
+        } else if (val[0] == '-') {
+            return list.getFloat(position-1) - list.getFloat(position+1);
+        } else {
+            return NAN;
+        }
+}
 
 float calculator::namedCalc(string val){
      int i=0;
