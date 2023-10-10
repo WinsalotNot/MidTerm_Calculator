@@ -1,22 +1,13 @@
 # MidTerm_Calculator
-Please create a scientific calculator using c++, with the rules below:
+A Scientific Calculator:
+To run the program, please open the .exe file / the application.
 
-The calculator should have + - / x   (10 points)
+Running the program in an IDE, type ".\TurnOnCalculator" to run the .exe file.
 
-Basic trigonometry function: sin cos tan (10 points)
+If a change is made in the code, type "make" in the terminal to re-compile the files together
+and create a new TurnOnCalculator.exe file that uses the new updated code.
 
-More than basic function: square root, exp, log, ln (15 points)
+If a new file is added, add that file name to the Makefile to compile it alongside the others
+when "make" is typed on the terminal.
 
-The calculator can input up to 10 or more variables and parameters. It is not limited to 2 + 2, 3 x 3, etc. (15 points)
 
-Inside the code, you apply the class function (separate class, inline class, constructor, etc.) (20 points)
-
-Inside the code, you apply the linked list or queue function (20 points)
-
-It can delete and show the history of the calculator (10 points)
-
-The teamwork section is based on Github, which the score will be:
-
-Using Github, you understand how to use the fork option, pull request option.
- 
-Teamwork on solving the problem. In your report, you must state the person in charge. Please make sure each member has an equivalent contribution
