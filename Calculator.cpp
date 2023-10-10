@@ -74,3 +74,144 @@ float calculator::namedCalc(string val){
         }
         else return NAN;
 }
+
+
+
+float calculator::calc(string equation){
+    doublyLinkedList equationElements;
+        float numHolder=0;
+        string stringHolder = "";
+        for (int i = 0; i < equation.length(); i++){
+            if (equation[i] == '(' && !isalpha(equation[i-1]) && !isdigit(equation[i-1])) {
+                int parOpen = 1;
+                int parClose = 0;
+                while (parOpen != parClose) {
+                    stringHolder += equation[i];
+                    i++;
+                    if (equation[i] == '(') {
+                        parOpen++;
+                    } else if (equation[i] == ')') {
+                        parClose++;
+                    }
+                    if (i >= equation.length()) {
+                        cout << "Parenthesis error!"<<endl;
+                        return NAN;
+                    }
+                }
+                stringHolder += ")";
+                equationElements.insertValue(stringHolder);
+                stringHolder = "";
+            } else if((isalpha(equation[i])&& equation[i-1] != ')')){
+                while (equation[i] != ')') {
+                    if (i >= equation.length()) {
+                        cout << "Parenthesis error!"<<endl;
+                        return NAN;
+                    }
+                    stringHolder += equation[i];
+                    i++;
+                }
+                stringHolder += equation[i];
+                equationElements.insertValue(stringHolder);
+                stringHolder = "";
+            } else if (((isdigit(equation[i]) || equation[i] == '.')) && equation[i-1] != ')'){
+                stringHolder += equation[i];
+                if (!isdigit(equation[i+1]) && equation[i+1] != '.'){
+                    equationElements.insertValue(stof(stringHolder));
+                    stringHolder = "";
+                }
+            } else if (isOperator(equation[i])){
+                if (isOperator(equation[i-1])) {
+                    cout << "Operator error!"<< endl;
+                    return NAN;
+                } else if (equation[i] == '-' && i==0) {
+                    stringHolder += equation[i];
+                } else if (i==0) {
+                    cout << "Operator shouldn't go first!"<<endl;
+                    return NAN;
+                } else {
+                    stringHolder += equation[i];
+                    equationElements.insertValue(stringHolder);
+                    stringHolder = "";
+                }
+            } else if (equation[i] == '(' || equation[i] == ')') {
+                stringHolder += equation[i];
+                equationElements.insertValue(stringHolder);
+                stringHolder = "";
+            } else {
+                cout<<"Input not valid!"<<endl;
+                return NAN;
+            }
+        }
+        calculate(equationElements);
+        return equationElements.getFloat(0);
+}
+
+void calculator::calculate(doublyLinkedList &equationElements){
+     string stringHolder = "";
+        for (int i = 0; i < equationElements.checkSize(); i++){
+            if (equationElements.checkValue(i) == 0) {
+                stringHolder = equationElements.getString(i);
+                if (stringHolder[0] == '('){
+                    stringHolder = stringHolder.substr(1, stringHolder.length() - 2);
+                    if (stringHolder[0]= '-') {
+                        equationElements.replaceValue(i,stof(stringHolder));
+                    } else {
+                    equationElements.replaceValue(i,calc(stringHolder));
+                    }
+                } else if (isalpha(stringHolder[0])) {
+                    float x = namedCalc(stringHolder);
+                    if (isnan(x)){
+                        equationElements.replaceValue(0,NAN);
+                        return;
+                    }
+                    equationElements.replaceValue(i,x);
+                } 
+            }   
+        }
+        takeOperator(equationElements);
+}
+
+void calculator::takeOperator(doublyLinkedList &equationElements){
+    for (int i = 0; i < equationElements.checkSize() - 1; i++) {
+            if (equationElements.checkValue(i) == 0) {
+                string stringHolder = equationElements.getString(i);
+                if (isOperator(stringHolder[0])) {
+                    string stringHolder2 = equationElements.getString(i + 2);
+
+                    if (stringHolder[0] == '^') {
+                        float numHolder = operatorCalc(equationElements, stringHolder, i);
+
+                        if (!isnan(numHolder)) {
+                            equationElements.deleteNode(i - 1);
+                            equationElements.deleteNode(i - 1);
+                            equationElements.replaceValue(i - 1, numHolder);
+                            i -= 2;
+                        }
+                    } else if (isWhat(stringHolder[0], "*/") && !isWhat(stringHolder2[0], "^")) {
+                        float numHolder = operatorCalc(equationElements, stringHolder, i);
+
+                        if (!isnan(numHolder)) {
+                            equationElements.deleteNode(i - 1);
+                            equationElements.deleteNode(i - 1);
+                            equationElements.replaceValue(i - 1, numHolder);
+                            i -= 2; 
+                        }
+                    } else if (isWhat(stringHolder[0], "-+") && !isWhat(stringHolder2[0], "^*/")) {
+                        float numHolder = operatorCalc(equationElements, stringHolder, i);
+
+                        if (!isnan(numHolder)) {
+                            equationElements.deleteNode(i - 1);
+                            equationElements.deleteNode(i - 1);
+                            equationElements.replaceValue(i - 1, numHolder);
+                            i -= 2;
+                        }
+                    }
+                }
+            }
+        }   
+
+        if (equationElements.checkSize() >1) {
+            takeOperator(equationElements);
+        }
+    }
+
